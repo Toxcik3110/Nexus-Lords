@@ -15,14 +15,33 @@ class MainApp extends React.Component {
 
 	width = 16;
 	height = 10;
+	scrollTop = 0;
 
 	constructor(props) {
 		super(props);
 		this.state = {
 			mapa: undefined,
 			mapaPosition: [0,0],
+			zoom:2,
 		}
+		// this.scrollTop = document.body.scrollTop;
+		window.addEventListener("wheel", (e) => {
+			console.log(e)
+			var zoom = 0;
+			if (e.deltaY < 0){
+				// console.log('downscroll code')
+				zoom = this.state.zoom > 2 ? -1 : 0;
+			} else {
+				// console.log('upscroll code')
+				zoom = 1;
+			}
+			this.setState({
+				zoom:this.state.zoom+zoom*2,
+			})
+		});
+		
 		var that = this;
+
 		socket.on('mapa', function (data) {
 			console.log(data);
 			that.setState({
@@ -37,13 +56,15 @@ class MainApp extends React.Component {
 			return (<div>no map</div>)
 		}
 		var buff = [];
-		var startX = arr.length/2 + coords[0] - this.width/2;
+		var width = this.width+this.state.zoom;
+		var height = this.height+this.state.zoom;
+		var startX = arr.length/2 + coords[0] - Math.round(width/2);
 		console.log(startX)
-		var startY = arr.length/2 + coords[1] - this.height/2;
+		var startY = arr.length/2 + coords[1] - Math.round(height/2);
 		console.log(startY)
-		for(var i = 0; i < this.height; i++) {
+		for(var i = 0; i < height; i++) {
 			var b = [];
-			for(var j = 0; j < this.width; j++) {
+			for(var j = 0; j < width; j++) {
 				b.push(arr[startY+i][startX+j]);
 			}
 			buff = [...buff, [...b]];
@@ -69,6 +90,7 @@ class MainApp extends React.Component {
 
 	render() {
 		var {mapa, mapaPosition} = this.state;
+		// console.log(document.body.scrollTop);
 		return (
 			<div className='cardFlex columnOrder justifyAround fullWidth fullHeight'>
 				{this.renderMapa(mapa, mapaPosition)}
