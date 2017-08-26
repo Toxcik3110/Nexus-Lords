@@ -56,35 +56,65 @@ class MainApp extends React.Component {
 			return (<div>no map</div>)
 		}
 		var buff = [];
-		var width = this.width+this.state.zoom;
-		var height = this.height+this.state.zoom;
+		var zoom = this.state.zoom;
+		var width = this.width+zoom;
+		var height = this.height+zoom;
 		var startX = arr.length/2 + coords[0] - Math.round(width/2);
 		console.log(startX)
 		var startY = arr.length/2 + coords[1] - Math.round(height/2);
 		console.log(startY)
+		// var height = arr.length;
+		// var width = arr[0].length;
+		// var rend = [];
+		// for(var i = 0; i < arr.length; i++) {
 		for(var i = 0; i < height; i++) {
 			var b = [];
+			var r = [];
+			// for(var j = 0; j < arr[i].length; j++) {
 			for(var j = 0; j < width; j++) {
 				b.push(arr[startY+i][startX+j]);
+				// var color = arr[i][j] === 0 ? '#4f4' : (arr[i][j] === 1 ? '#4af' : '#000');
+				// b.push(arr[i][j])
+				// r.push(<rect 
+				// 	x={`${100/j*arr[i].length}`} 
+				// 	y={`${100/i*arr.length}`}
+				// 	width={`${100/arr[i].length}`}
+				// 	height={`${100/arr.length}`}
+				// 	/>
+				// 	);
 			}
 			buff = [...buff, [...b]];
+			// rend = [...rend, [...r]];
 		}
 		console.log(buff)
-		return (<div className='cardFlex cardGap columnOrder'>
+		var sizeW = 100/(width);
+		var sizeH = 100/(height);
+		var y = -sizeH;
+		// return (<div className='cardFlex cardGap'>
+		// 	<svg viewBox='0 0 100 100' className='cardGap'>
+		// 	{rend}
+		// 	</svg></div>)
+		return (<div className='cardFlex cardGap'>
+				<svg viewBox='0 0 100 100' className='cardGap'>
 			{buff.map((row) => {
-				return (<div className='cardGap cardFlex' key={uuid()}>
-					{row.map((elem) => {
+				y+=sizeH;
+				var x = -sizeW;
+				return (
+					row.map((elem) => {
+						x+=sizeW;
 						var color = elem === 0 ? '#4f4' : (elem === 1 ? '#4af' : '#000');
-						return (<div key={uuid()} 
-							style={{backgroundColor:color}}
-							className="cardGap height100">
-							<h1 className='centerText'>
-							{' '}
-							</h1>
-						</div>)
-					})}
-				</div>)
+						return (<rect key={uuid()} 
+							style={{fill:color}}
+							x={`${x}`}
+							y={`${y}`}
+							width={`${sizeW}`}
+							height={`${sizeH}`}
+							>
+						</rect>)
+					})
+				)
 			})}
+		</svg>
 		</div>)
 	}
 
@@ -92,7 +122,7 @@ class MainApp extends React.Component {
 		var {mapa, mapaPosition} = this.state;
 		// console.log(document.body.scrollTop);
 		return (
-			<div className='cardFlex columnOrder justifyAround fullWidth fullHeight'>
+			<div className='cardFlex fullWidth fullHeight'>
 				{this.renderMapa(mapa, mapaPosition)}
 			</div>
 

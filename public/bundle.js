@@ -39643,43 +39643,66 @@ var MainApp = function (_React$Component) {
 				);
 			}
 			var buff = [];
-			var width = this.width + this.state.zoom;
-			var height = this.height + this.state.zoom;
+			var zoom = this.state.zoom;
+			var width = this.width + zoom;
+			var height = this.height + zoom;
 			var startX = arr.length / 2 + coords[0] - Math.round(width / 2);
 			console.log(startX);
 			var startY = arr.length / 2 + coords[1] - Math.round(height / 2);
 			console.log(startY);
+			// var height = arr.length;
+			// var width = arr[0].length;
+			// var rend = [];
+			// for(var i = 0; i < arr.length; i++) {
 			for (var i = 0; i < height; i++) {
 				var b = [];
+				var r = [];
+				// for(var j = 0; j < arr[i].length; j++) {
 				for (var j = 0; j < width; j++) {
 					b.push(arr[startY + i][startX + j]);
+					// var color = arr[i][j] === 0 ? '#4f4' : (arr[i][j] === 1 ? '#4af' : '#000');
+					// b.push(arr[i][j])
+					// r.push(<rect 
+					// 	x={`${100/j*arr[i].length}`} 
+					// 	y={`${100/i*arr.length}`}
+					// 	width={`${100/arr[i].length}`}
+					// 	height={`${100/arr.length}`}
+					// 	/>
+					// 	);
 				}
 				buff = [].concat(_toConsumableArray(buff), [[].concat(b)]);
+				// rend = [...rend, [...r]];
 			}
 			console.log(buff);
+			var sizeW = 100 / width;
+			var sizeH = 100 / height;
+			var y = -sizeH;
+			// return (<div className='cardFlex cardGap'>
+			// 	<svg viewBox='0 0 100 100' className='cardGap'>
+			// 	{rend}
+			// 	</svg></div>)
 			return _react2.default.createElement(
 				'div',
-				{ className: 'cardFlex cardGap columnOrder' },
-				buff.map(function (row) {
-					return _react2.default.createElement(
-						'div',
-						{ className: 'cardGap cardFlex', key: (0, _nodeUuid2.default)() },
-						row.map(function (elem) {
+				{ className: 'cardFlex cardGap' },
+				_react2.default.createElement(
+					'svg',
+					{ viewBox: '0 0 100 100', className: 'cardGap' },
+					buff.map(function (row) {
+						y += sizeH;
+						var x = -sizeW;
+						return row.map(function (elem) {
+							x += sizeW;
 							var color = elem === 0 ? '#4f4' : elem === 1 ? '#4af' : '#000';
-							return _react2.default.createElement(
-								'div',
-								{ key: (0, _nodeUuid2.default)(),
-									style: { backgroundColor: color },
-									className: 'cardGap height100' },
-								_react2.default.createElement(
-									'h1',
-									{ className: 'centerText' },
-									' '
-								)
-							);
-						})
-					);
-				})
+							return _react2.default.createElement('rect', { key: (0, _nodeUuid2.default)(),
+								style: { fill: color },
+								x: '' + x,
+								y: '' + y,
+								width: '' + sizeW,
+								height: '' + sizeH
+							});
+						});
+					})
+				)
 			);
 		}
 	}, {
@@ -39692,7 +39715,7 @@ var MainApp = function (_React$Component) {
 
 			return _react2.default.createElement(
 				'div',
-				{ className: 'cardFlex columnOrder justifyAround fullWidth fullHeight' },
+				{ className: 'cardFlex fullWidth fullHeight' },
 				this.renderMapa(mapa, mapaPosition)
 			);
 		}
